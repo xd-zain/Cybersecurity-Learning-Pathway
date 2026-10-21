@@ -171,7 +171,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                 onClick={() => setActiveTab('assistant')}
                 className="flex items-center gap-2 px-5 py-3 rounded-full bg-[#232321] hover:bg-[#2c2c29] text-[#F1EFEA] border border-[rgba(241,239,234,0.16)] font-medium text-xs transition-all cursor-pointer"
               >
-                <Sparkles className="w-4 h-4 text-cyan-400" />
+                <Sparkles className="w-4 h-4 text-[#F1EFEA]" />
                 <span>Ask AI Mentor</span>
               </button>
             )}
@@ -181,7 +181,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
         {/* Minimal Progress Bar */}
         <div className="relative z-10 w-full mt-6 bg-[rgba(241,239,234,0.06)] h-1.5 rounded-full overflow-hidden">
           <div 
-            className="h-full bg-cyan-400 transition-all duration-700 ease-out shadow-[0_0_10px_rgba(6,182,212,0.5)]"
+            className="h-full bg-[#F1EFEA] transition-all duration-700 ease-out shadow-[0_0_10px_rgba(241,239,234,0.5)]"
             style={{ width: `${progressPercent}%` }}
           />
         </div>
@@ -198,7 +198,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
             {/* Header with Mode Switcher (Dossier Folders vs Timeline) */}
             <div className="flex items-center justify-between pb-3 mb-4 border-b border-[rgba(241,239,234,0.08)]">
               <div className="flex items-center gap-2">
-                <Folder className="w-4 h-4 text-cyan-400" />
+                <Folder className="w-4 h-4 text-[#F1EFEA]" />
                 <span className="text-xs font-mono font-medium text-[#F1EFEA] uppercase tracking-wider">
                   Course Dossiers
                 </span>
@@ -210,7 +210,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                   onClick={() => setNavMode('folders')}
                   className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                     navMode === 'folders' 
-                      ? 'bg-cyan-500/20 text-cyan-300 font-semibold' 
+                      ? 'bg-[#F1EFEA] text-[#111110] font-semibold' 
                       : 'text-[#98968f] hover:text-[#F1EFEA]'
                   }`}
                 >
@@ -220,7 +220,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                   onClick={() => setNavMode('timeline')}
                   className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                     navMode === 'timeline' 
-                      ? 'bg-cyan-500/20 text-cyan-300 font-semibold' 
+                      ? 'bg-[#F1EFEA] text-[#111110] font-semibold' 
                       : 'text-[#98968f] hover:text-[#F1EFEA]'
                   }`}
                 >
@@ -235,8 +235,8 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                 
                 {/* 1. Interactive Glass Folder Dossier (Same Look & Feel as Landing Page) */}
                 <div className="py-2 flex flex-col items-center justify-center">
-                  <div className="text-[10px] font-mono text-cyan-400 uppercase tracking-widest mb-2 flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                  <div className="text-[10px] font-mono text-[#F1EFEA] uppercase tracking-widest mb-2 flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#F1EFEA] animate-pulse" />
                     <span>Active Folder: {selectedTier} Dossier</span>
                   </div>
                   
@@ -295,18 +295,18 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                           }}
                           className={`w-full p-3.5 rounded-2xl border text-left transition-all duration-200 cursor-pointer flex items-center justify-between gap-3 ${
                             isSelected
-                              ? 'bg-[#1e1e1c] border-cyan-400/50 shadow-[0_0_20px_rgba(6,182,212,0.18)] ring-1 ring-cyan-400/30'
+                              ? 'bg-[#1e1e1c] border-[#F1EFEA]/60 shadow-[0_0_20px_rgba(241,239,234,0.12)] ring-1 ring-[#F1EFEA]/30'
                               : 'bg-[#151514] border-[rgba(241,239,234,0.07)] hover:bg-[#1a1a19] hover:border-[rgba(241,239,234,0.16)]'
                           }`}
                         >
                           <div className="flex items-center gap-3 min-w-0">
                             <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border transition-all ${
                               isSelected
-                                ? 'bg-cyan-500/20 border-cyan-400 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.3)]'
+                                ? 'bg-[#F1EFEA] border-[#F1EFEA] text-[#111110] shadow-sm'
                                 : 'bg-[#20201e] border-white/5 text-[#98968f]'
                             }`}>
                               {isSelected ? (
-                                <FolderOpen className="w-4 h-4 text-cyan-300" />
+                                <FolderOpen className="w-4 h-4 text-[#111110]" />
                               ) : (
                                 <Folder className="w-4 h-4 text-[#98968f]" />
                               )}
@@ -330,7 +330,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                           </div>
 
                           <div className="flex flex-col items-end shrink-0">
-                            <span className={`text-xs font-mono font-medium ${isSelected ? 'text-cyan-300' : 'text-[#98968f]'}`}>
+                            <span className={`text-xs font-mono font-medium ${isSelected ? 'text-[#F1EFEA]' : 'text-[#98968f]'}`}>
                               {clearedInTier}/{tierModules.length}
                             </span>
                             <span className="text-[9px] font-mono text-[#98968f]/60">
@@ -346,7 +346,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                 {/* 3. Project Videos inside Selected Sub-Folder */}
                 <div className="pt-3 border-t border-[rgba(241,239,234,0.08)]">
                   <div className="flex items-center justify-between text-[11px] font-mono text-[#98968f] mb-2 px-1">
-                    <span className="uppercase tracking-wider text-cyan-400">
+                    <span className="uppercase tracking-wider text-[#F1EFEA]">
                       {selectedTier} Project Videos
                     </span>
                     <span>Click to Play</span>
@@ -364,7 +364,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                           onClick={() => handleSelectModule(m.id)}
                           className={`p-3 rounded-2xl border transition-all duration-200 cursor-pointer flex items-center justify-between gap-3 ${
                             isCurrent
-                              ? 'bg-[#222220] border-cyan-400/40 shadow-[0_0_15px_rgba(6,182,212,0.15)] ring-1 ring-cyan-400/30'
+                              ? 'bg-[#222220] border-[#F1EFEA]/50 shadow-[0_0_15px_rgba(241,239,234,0.1)] ring-1 ring-[#F1EFEA]/30'
                               : isPassed
                               ? 'bg-[#181817] border-emerald-500/20 hover:bg-[#1d1d1c]'
                               : 'bg-[#171716] border-[rgba(241,239,234,0.06)] hover:bg-[#1e1e1d]'
@@ -375,7 +375,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                               isPassed 
                                 ? 'bg-emerald-500 text-slate-950 shadow-sm'
                                 : isCurrent 
-                                ? 'bg-cyan-400 text-slate-950 font-bold'
+                                ? 'bg-[#F1EFEA] text-[#111110] font-bold'
                                 : 'bg-[#242422] text-[#98968f]'
                             }`}>
                               {isPassed ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : `0${m.id}`}
@@ -401,12 +401,12 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
 
                           <div className="shrink-0 flex items-center gap-1.5">
                             {isCurrent && (
-                              <span className="text-[10px] font-mono text-cyan-300 hidden sm:inline">
+                              <span className="text-[10px] font-mono text-[#F1EFEA] hidden sm:inline">
                                 Playing
                               </span>
                             )}
                             <span className={`w-6 h-6 rounded-full flex items-center justify-center transition-all ${
-                              isCurrent ? 'bg-cyan-400 text-slate-950 shadow-md' : 'bg-white/5 text-[#98968f] hover:text-white'
+                              isCurrent ? 'bg-[#F1EFEA] text-[#111110] shadow-md' : 'bg-white/5 text-[#98968f] hover:text-white'
                             }`}>
                               <Play className="w-3 h-3 fill-current ml-0.5" />
                             </span>
@@ -637,7 +637,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                 {/* Hands-on Lab Overview */}
                 <div className="p-4.5 rounded-2xl bg-[#1a1a19] border border-[rgba(241,239,234,0.1)]">
                   <div className="flex items-center gap-2 text-xs font-medium text-[#F1EFEA] mb-1">
-                    <Terminal className="w-4 h-4 text-cyan-400" />
+                    <Terminal className="w-4 h-4 text-[#F1EFEA]" />
                     <span>Hands-On Practical Lab Assignment</span>
                   </div>
                   <p className="text-xs text-[#98968f] leading-relaxed">
@@ -652,7 +652,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                   </span>
                   <button
                     onClick={() => setActiveTab('quiz')}
-                    className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold text-xs transition-all cursor-pointer shadow-[0_0_20px_rgba(6,182,212,0.35)]"
+                    className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#F1EFEA] hover:bg-white text-[#111110] font-medium text-xs transition-all cursor-pointer shadow-md"
                   >
                     <span>Launch Graded Assessment</span>
                     <ArrowRight className="w-4 h-4" />
@@ -719,7 +719,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                               optionClasses = "bg-rose-950/40 border-rose-500/50 text-rose-200";
                             }
                           } else if (isOptionSelected) {
-                            optionClasses = "bg-[#252523] border-cyan-400 text-cyan-200 shadow-sm";
+                            optionClasses = "bg-[#252523] border-[#F1EFEA] text-[#F1EFEA] shadow-sm";
                           }
 
                           return (
@@ -774,7 +774,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                     {activeModule.id < 10 && quizScore! >= 75 && (
                       <button
                         onClick={() => handleSelectModule(activeModule.id + 1)}
-                        className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-cyan-400 text-slate-950 text-xs font-bold cursor-pointer shadow-md hover:bg-cyan-300"
+                        className="flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-[#F1EFEA] hover:bg-white text-[#111110] text-xs font-medium cursor-pointer shadow-md"
                       >
                         <span>Next Module</span>
                         <ArrowRight className="w-3.5 h-3.5" />
@@ -789,7 +789,7 @@ export const StudentDashboard: React.FC<StudentDashboardProps> = ({ onOpenCertif
                     <button
                       onClick={handleQuizSubmit}
                       disabled={Object.keys(selectedAnswers).length < activeModule.quiz.length}
-                      className="px-6 py-2.5 rounded-full bg-cyan-400 hover:bg-cyan-300 text-slate-950 font-bold text-xs shadow-md transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="px-6 py-2.5 rounded-full bg-[#F1EFEA] hover:bg-white text-[#111110] font-medium text-xs shadow-md transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                       Submit for Grading
                     </button>

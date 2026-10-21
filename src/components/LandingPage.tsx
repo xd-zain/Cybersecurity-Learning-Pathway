@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import SculptureHero from './ui/liquid-sculpture-hero';
 import GlassFolder from './ui/glass-folder-cards';
+import { SplineSceneBasic } from './ui/demo';
 import { COURSE_MODULES } from '../data/curriculum';
 
 interface LandingPageProps {
@@ -122,14 +123,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnrollClick, onExplo
           href: "#curriculum",
           onClick: onExploreModules,
         }}
-        hint="Hover across the cyber defense core"
+        hint="Hover across the cyber defense sentinel"
         theme="dark"
         background="#111110"
         darkBackground="#111110"
         textColor="#F1EFEA"
         accentColor="#F1EFEA"
-        src="/src/assets/images/cyber_hero_defense_1792447409816.jpg"
-        darkSrc="/src/assets/images/cyber_hero_defense_1792447409816.jpg"
+        src="/assets/aistudio/b7b1a469-17f4-4893-8808-daf4c398cafd__1__6a65870b.png"
+        darkSrc="/assets/aistudio/b7b1a469-17f4-4893-8808-daf4c398cafd__1__6a65870b.png"
+        particleSpread={0.3}
+        strength={0.4}
+        radius={110}
+        returnSpeed={1.9}
+        turbulence={0.25}
+        liquid={0.2}
+        dotSize={0.8}
         showCredit={false}
       />
 
@@ -232,6 +240,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnrollClick, onExplo
           </div>
 
         </div>
+      </section>
+
+      {/* 2.5 INTERACTIVE 3D ROBOT GUARDIAN — SPLINE 3D SCENE */}
+      <section className="py-12 px-6 max-w-[1360px] mx-auto">
+        <SplineSceneBasic onInteract={onExploreModules} />
       </section>
 
       {/* 3. INTERACTIVE COURSE DOSSIERS (GLASS FOLDERS) */}

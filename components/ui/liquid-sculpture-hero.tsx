@@ -176,23 +176,23 @@ void main(){
   float e = clamp(pr*2.0 + f, 0.0, 1.0);
 
   vec2 acc = vec2(0.0);
-  // blown outward and swirled around the cursor
-  acc += n*f*1.25*uStrength*uSpread*light;
-  acc += vec2(-n.y, n.x)*f*1.45*uStrength*uSpread*(0.4+sd);
-  // carried by the liquid wake
-  acc += (wake*42.0*uSpread*light - vel)*e*0.08;
-  // curl-noise turbulence where the material is disturbed (and during the intro)
+  // gentle, controlled liquid displacement with minimal scattering
+  acc += n*f*0.45*uStrength*uSpread*light;
+  acc += vec2(-n.y, n.x)*f*0.5*uStrength*uSpread*(0.4+sd);
+  // carried by the liquid wake with low dispersion
+  acc += (wake*18.0*uSpread*light - vel)*e*0.05;
+  // curl-noise turbulence where the material is disturbed
   vec2 q = p*0.0095 + vec2(uTime*0.35, -uTime*0.2);
   vec2 c = curl(q) + 0.5*curl(q*2.3 + 7.1);
-  acc += c*(e*1.2*uSpread + uIntro*1.5)*uTurb*light;
-  // elastic return home
-  float k = (0.006 + 0.02*uReturn)*(0.65+sd*0.7)*(1.0 - uIntro*0.75);
+  acc += c*(e*0.4*uSpread + uIntro*1.2)*uTurb*light;
+  // fast elastic return home
+  float k = (0.028 + 0.055*uReturn)*(0.85+sd*0.6)*(1.0 - uIntro*0.75);
   acc -= off*k;
 
   vel += acc*uDt;
-  vel *= pow(mix(0.93, 0.955, e), uDt);
+  vel *= pow(mix(0.84, 0.88, e), uDt);
   off += vel*uDt;
-  if(dot(off,off) < 0.0004 && dot(vel,vel) < 0.0004){ off = vec2(0.0); vel = vec2(0.0); }
+  if(dot(off,off) < 0.008 && dot(vel,vel) < 0.008){ off = vec2(0.0); vel = vec2(0.0); }
   o = vec4(off, vel);
 }
 `
@@ -375,7 +375,7 @@ function compile(gl: WebGL2RenderingContext, vs: string, fs: string): Prog {
 /* ── engine ──────────────────────────────────────────────────────────── */
 
 const TEX_W = 1024
-const SETTLE_FRAMES = 270
+const SETTLE_FRAMES = 80
 
 class LiquidEngine {
   lastImage: HTMLImageElement | null = null
@@ -799,10 +799,10 @@ class LiquidEngine {
     this.prevMouse.y = this.mouse.y
     this.mvel.x += (clamp(vx, -60, 60) - this.mvel.x) * 0.5
     this.mvel.y += (clamp(vy, -60, 60) - this.mvel.y) * 0.5
-    const pk = this.presenceTarget > this.presence ? 0.1 : 0.035
+    const pk = this.presenceTarget > this.presence ? 0.14 : 0.18
     this.presence += (this.presenceTarget - this.presence) * (1 - Math.pow(1 - pk, dt))
     if (this.presence < 0.001 && this.presenceTarget === 0) this.presence = 0
-    const fk = this.presenceTarget > this.flowing ? 0.05 : 0.018
+    const fk = this.presenceTarget > this.flowing ? 0.08 : 0.16
     this.flowing += (this.presenceTarget - this.flowing) * (1 - Math.pow(1 - fk, dt))
     if (this.flowing < 0.002 && this.presenceTarget === 0) this.flowing = 0
     if (this.introT < 1) this.introT = Math.min(1, this.introT + Math.min(rawMs, 100) / 3200)
@@ -866,7 +866,7 @@ class LiquidEngine {
     gl.uniform2f(P.u.uSize, r.w, r.h)
     gl.uniform1f(P.u.uRadius, this.radiusPx())
     gl.uniform1f(P.u.uPresence, Math.max(this.presence, this.burst))
-    gl.uniform1f(P.u.uDecay, Math.pow(0.968, dt))
+    gl.uniform1f(P.u.uDecay, Math.pow(0.85, dt))
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4)
     this.flowIdx = dst
     this.flowDirty = true
@@ -1110,11 +1110,11 @@ export interface SculptureHeroProps {
 }
 
 const DEFAULTS = {
-  src: "/src/assets/images/cyber_hero_defense_1792447409816.jpg",
-  darkSrc: "/src/assets/images/cyber_hero_defense_1792447409816.jpg",
-  mobileSrc: "/src/assets/images/cyber_hero_defense_1792447409816.jpg",
-  mobileDarkSrc: "/src/assets/images/cyber_hero_defense_1792447409816.jpg",
-  imageAlt: "Zero-Trust Cybersecurity Command Holographic Core",
+  src: "/assets/aistudio/b7b1a469-17f4-4893-8808-daf4c398cafd__1__6a65870b.png",
+  darkSrc: "/assets/aistudio/b7b1a469-17f4-4893-8808-daf4c398cafd__1__6a65870b.png",
+  mobileSrc: "/assets/aistudio/b7b1a469-17f4-4893-8808-daf4c398cafd__1__6a65870b.png",
+  mobileDarkSrc: "/assets/aistudio/b7b1a469-17f4-4893-8808-daf4c398cafd__1__6a65870b.png",
+  imageAlt: "Autonomous Zero-Trust Cybersecurity Sentinel Holographic Core",
   imageBackground: "#111110",
   brand: "Security Analyzires",
   navLinks: [

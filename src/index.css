@@ -217,7 +217,7 @@
 .mo-bg {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 46%, rgba(6, 182, 212, 0.08) 0%, transparent 65%);
+  background: radial-gradient(circle at 50% 46%, rgba(241, 239, 234, 0.03) 0%, transparent 65%);
   pointer-events: none;
 }
 
@@ -229,7 +229,7 @@
   height: 320px;
   transform: translate(-50%, -50%);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, rgba(59, 130, 246, 0.15) 35%, transparent 70%);
+  background: radial-gradient(circle, rgba(241, 239, 234, 0.12) 0%, rgba(241, 239, 234, 0.04) 35%, transparent 70%);
   filter: blur(40px);
   opacity: var(--oCenter, 0);
   pointer-events: none;
@@ -252,7 +252,7 @@
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(6, 182, 212, 0.6) 0%, rgba(14, 165, 233, 0.25) 40%, transparent 70%);
+  background: radial-gradient(circle, rgba(241, 239, 234, 0.35) 0%, rgba(241, 239, 234, 0.1) 40%, transparent 70%);
   filter: blur(12px);
   pointer-events: none;
   opacity: 0;
@@ -278,7 +278,7 @@
   position: absolute;
   inset: -6px;
   border-radius: inherit;
-  background: radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.35) 0%, rgba(59, 130, 246, 0.15) 50%, transparent 75%);
+  background: radial-gradient(circle at 50% 50%, rgba(241, 239, 234, 0.15) 0%, transparent 75%);
   filter: blur(14px);
   opacity: var(--oGlow, 1);
   pointer-events: none;
@@ -288,7 +288,7 @@
   position: absolute;
   inset: -12px;
   border-radius: inherit;
-  background: radial-gradient(circle, rgba(34, 197, 94, 0.5) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.4) 0%, transparent 70%);
   filter: blur(16px);
   opacity: var(--oHalo, 0);
   pointer-events: none;
@@ -298,10 +298,10 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  background: rgba(13, 19, 34, 0.88);
+  background: rgba(23, 23, 22, 0.96);
   backdrop-filter: blur(24px);
-  border: 1px solid rgba(6, 182, 212, 0.3);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(241, 239, 234, 0.16);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   opacity: var(--oPill, 1);
   overflow: hidden;
   pointer-events: none;
@@ -320,11 +320,11 @@
   border-radius: 50%;
 }
 .mo-aurora i:nth-child(1) {
-  background: radial-gradient(circle at 30% 50%, rgba(6, 182, 212, 0.3), transparent 50%);
+  background: radial-gradient(circle at 30% 50%, rgba(241, 239, 234, 0.08), transparent 50%);
   animation: mo-drift 8s ease-in-out infinite alternate;
 }
 .mo-aurora i:nth-child(2) {
-  background: radial-gradient(circle at 70% 50%, rgba(139, 92, 246, 0.25), transparent 50%);
+  background: radial-gradient(circle at 70% 50%, rgba(241, 239, 234, 0.05), transparent 50%);
   animation: mo-drift 10s ease-in-out infinite alternate-reverse;
 }
 
@@ -332,8 +332,8 @@
   position: absolute;
   inset: 0;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 35%, #38bdf8 0%, #0ea5e9 40%, #0369a1 80%, #082f49 100%);
-  box-shadow: 0 0 30px rgba(14, 165, 233, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+  background: radial-gradient(circle at 35% 35%, #F1EFEA 0%, #d4d0c7 40%, #8c8983 80%, #2b2b29 100%);
+  box-shadow: 0 0 25px rgba(241, 239, 234, 0.35), inset 0 2px 4px rgba(255, 255, 255, 0.4);
   opacity: var(--oBall, 0);
   pointer-events: none;
 }
@@ -343,7 +343,7 @@
   inset: 0;
   border-radius: 50%;
   background: radial-gradient(circle at 35% 35%, #86efac 0%, #22c55e 40%, #15803d 85%);
-  box-shadow: 0 0 40px rgba(34, 197, 94, 0.75);
+  box-shadow: 0 0 35px rgba(34, 197, 94, 0.6);
   opacity: var(--oGreen, 0);
   transform: scale(var(--gs, 0.55));
   pointer-events: none;
@@ -353,9 +353,9 @@
   position: absolute;
   inset: 0;
   border-radius: 20px;
-  background: linear-gradient(145deg, rgba(13, 20, 36, 0.97) 0%, rgba(6, 10, 20, 0.99) 100%);
-  border: 1px solid rgba(6, 182, 212, 0.4);
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.8), 0 0 35px rgba(6, 182, 212, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  background: #171716;
+  border: 1px solid rgba(241, 239, 234, 0.16);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   opacity: var(--oCard, 0);
   transform: scale(var(--cs, 1));
   overflow: hidden;
@@ -366,7 +366,7 @@
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  border: 1px solid rgba(6, 182, 212, 0.4);
+  border: 1px solid rgba(241, 239, 234, 0.18);
   opacity: var(--oRing, 1);
   pointer-events: none;
 }
@@ -399,7 +399,7 @@
 .mo-spark {
   width: 20px;
   height: 20px;
-  color: #06b6d4;
+  color: #F1EFEA;
   flex-shrink: 0;
   margin-right: 8px;
   opacity: 0.9;
@@ -413,7 +413,7 @@
   background: transparent !important;
   border: none !important;
   outline: none !important;
-  color: #f8fafc !important;
+  color: #F1EFEA !important;
   font-size: 14px;
   font-family: inherit;
   padding: 0 8px;
@@ -425,7 +425,7 @@
   z-index: 60 !important;
 }
 .mo-field::placeholder {
-  color: #64748b;
+  color: #98968f;
   opacity: 1;
 }
 
@@ -433,9 +433,9 @@
   width: 36px;
   height: 36px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #64748b;
+  background: rgba(241, 239, 234, 0.08);
+  border: 1px solid rgba(241, 239, 234, 0.16);
+  color: #98968f;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -451,13 +451,13 @@
   height: 16px;
 }
 .mo-send[data-ready] {
-  background: #06b6d4;
-  border-color: #22d3ee;
-  color: #030712;
-  box-shadow: 0 0 16px rgba(6, 182, 212, 0.5);
+  background: #F1EFEA;
+  border-color: #F1EFEA;
+  color: #111110;
+  box-shadow: 0 0 14px rgba(241, 239, 234, 0.35);
 }
 .mo-send[data-ready]:hover {
-  background: #22d3ee;
+  background: #ffffff;
   transform: scale(1.05);
 }
 
@@ -507,7 +507,7 @@
   gap: 8px;
   font-size: 11px;
   font-weight: 600;
-  color: #38bdf8;
+  color: #F1EFEA;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   margin-bottom: 8px;
@@ -525,7 +525,7 @@
 .mo-a-body {
   font-size: 13px;
   line-height: 1.6;
-  color: #e2e8f0;
+  color: #F1EFEA;
   font-family: inherit;
   margin: 0;
 }
@@ -544,7 +544,7 @@
   pointer-events: none;
   font-size: 12px;
   font-family: monospace;
-  color: #38bdf8;
+  color: #98968f;
   z-index: 25;
   letter-spacing: 0.04em;
   display: flex;
@@ -589,9 +589,9 @@
   left: 50%;
   top: calc(46% + 80px);
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  color: #94a3b8;
+  background: #1c1c1b;
+  border: 1px solid rgba(241, 239, 234, 0.16);
+  color: #F1EFEA;
   font-size: 11px;
   padding: 6px 18px;
   border-radius: 999px;

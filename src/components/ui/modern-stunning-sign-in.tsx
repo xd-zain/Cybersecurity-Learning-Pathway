@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useState } from "react";
-import { Shield, Lock, Mail, ArrowRight, KeyRound, CheckCircle2, AlertCircle } from "lucide-react";
+import { Shield, Lock, Mail, ArrowRight, KeyRound, CheckCircle2, AlertCircle, X } from "lucide-react";
 
 export interface SignInProps {
   onSignIn?: (email: string, password: string) => Promise<{ success: boolean; requires2FA?: boolean; error?: string }>;
@@ -118,37 +118,38 @@ const SignIn1: React.FC<SignInProps> = ({
   };
 
   return (
-    <div className="min-h-[560px] flex flex-col items-center justify-center bg-[#070b14] relative overflow-hidden w-full rounded-2xl py-8 px-4">
-      {/* Background radial highlight */}
+    <div className="min-h-[540px] flex flex-col items-center justify-center bg-[#141413] border border-[rgba(241,239,234,0.12)] relative overflow-hidden w-full rounded-3xl py-8 px-5 shadow-2xl">
+      {/* Subtle warm halo */}
       <div 
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 rounded-full blur-[100px] pointer-events-none opacity-20 bg-cyan-500" 
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full blur-[120px] pointer-events-none opacity-25 bg-[#F1EFEA]/10" 
         aria-hidden="true" 
       />
 
-      {/* Centered glass card */}
-      <div className="relative z-10 w-full max-w-sm rounded-3xl bg-gradient-to-b from-white/[0.08] to-white/[0.02] backdrop-blur-xl border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.7)] p-7 flex flex-col items-center">
+      {/* Centered card */}
+      <div className="relative z-10 w-full max-w-sm rounded-2xl bg-[#171716] border border-[rgba(241,239,234,0.1)] p-7 flex flex-col items-center shadow-xl">
         {onClose && (
           <button 
             onClick={onClose}
-            className="absolute top-4 right-4 text-slate-400 hover:text-white text-xs px-2 py-1 rounded bg-white/5 hover:bg-white/10 transition-colors"
+            className="absolute top-4 right-4 text-[#98968f] hover:text-[#F1EFEA] text-xs p-1.5 rounded-full hover:bg-white/5 transition-colors cursor-pointer"
+            aria-label="Close"
           >
-            ✕
+            <X className="w-4 h-4" />
           </button>
         )}
 
-        {/* Logo badge with cybersecurity icon */}
-        <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-600/30 border border-cyan-400/30 mb-5 shadow-[0_0_20px_rgba(6,182,212,0.25)]">
-          <Shield className="w-6 h-6 text-cyan-400" />
+        {/* Brand Icon */}
+        <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-[#222220] border border-[rgba(241,239,234,0.15)] mb-4 shadow-sm text-[#F1EFEA]">
+          <Shield className="w-6 h-6 text-[#F1EFEA]" />
         </div>
 
         {/* Title */}
-        <h2 className="text-2xl font-bold tracking-tight text-white mb-1 text-center font-sans">
-          Security Analyzires
+        <h2 className="text-2xl font-medium tracking-tight text-[#F1EFEA] mb-1 text-center font-sans">
+          Security Analyzires<sup className="text-xs ml-0.5 opacity-60">®</sup>
         </h2>
-        <p className="text-xs text-slate-400 mb-6 text-center">
-          {mode === "signin" && "Sign in to access your cybersecurity labs & lectures"}
-          {mode === "signup" && "Create your academy account & enroll free"}
-          {mode === "2fa" && "Two-Factor Verification: Enter 6-digit OTP"}
+        <p className="text-xs text-[#98968f] mb-6 text-center leading-relaxed">
+          {mode === "signin" && "Sign in to access your enrolled courses & AI Defense Mentor"}
+          {mode === "signup" && "Enroll into the zero-trust curriculum and unlock full access"}
+          {mode === "2fa" && "Two-Factor Verification: Enter 6-digit OTP code"}
         </p>
 
         {/* Form */}
@@ -161,7 +162,7 @@ const SignIn1: React.FC<SignInProps> = ({
                   type="text"
                   value={name}
                   disabled={loading}
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.07] border border-white/10 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all"
+                  className="w-full px-4 py-2.5 rounded-xl bg-[#111110] border border-[rgba(241,239,234,0.14)] text-[#F1EFEA] placeholder-[#98968f]/60 text-xs font-sans focus:outline-none focus:border-[#F1EFEA] focus:ring-1 focus:ring-[#F1EFEA] transition-all"
                   onChange={(e) => setName(e.target.value)}
                 />
               </div>
@@ -175,7 +176,7 @@ const SignIn1: React.FC<SignInProps> = ({
                     type="email"
                     value={email}
                     disabled={loading}
-                    className="w-full px-4 py-3 rounded-xl bg-white/[0.07] border border-white/10 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#111110] border border-[rgba(241,239,234,0.14)] text-[#F1EFEA] placeholder-[#98968f]/60 text-xs font-sans focus:outline-none focus:border-[#F1EFEA] focus:ring-1 focus:ring-[#F1EFEA] transition-all"
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
@@ -185,7 +186,7 @@ const SignIn1: React.FC<SignInProps> = ({
                     type="password"
                     value={password}
                     disabled={loading}
-                    className="w-full px-4 py-3 rounded-xl bg-white/[0.07] border border-white/10 text-white placeholder-slate-400 text-sm focus:outline-none focus:ring-2 focus:ring-cyan-400/50 focus:border-cyan-400/50 transition-all"
+                    className="w-full px-4 py-2.5 rounded-xl bg-[#111110] border border-[rgba(241,239,234,0.14)] text-[#F1EFEA] placeholder-[#98968f]/60 text-xs font-sans focus:outline-none focus:border-[#F1EFEA] focus:ring-1 focus:ring-[#F1EFEA] transition-all"
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
@@ -198,43 +199,43 @@ const SignIn1: React.FC<SignInProps> = ({
                   maxLength={6}
                   value={otp}
                   disabled={loading}
-                  className="w-full tracking-widest text-center text-xl font-mono px-4 py-3 rounded-xl bg-white/[0.07] border border-white/10 text-cyan-400 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-cyan-400/50 transition-all"
+                  className="w-full tracking-widest text-center text-xl font-mono px-4 py-3 rounded-xl bg-[#111110] border border-[rgba(241,239,234,0.14)] text-[#F1EFEA] placeholder-[#98968f]/50 focus:outline-none focus:border-[#F1EFEA] transition-all"
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
                 />
               </div>
             )}
 
             {error && (
-              <div className="flex items-center gap-2 text-xs text-rose-400 bg-rose-500/10 border border-rose-500/20 p-2.5 rounded-lg text-left">
-                <AlertCircle className="w-4 h-4 shrink-0" />
+              <div className="flex items-center gap-2 text-xs text-rose-300 bg-rose-950/40 border border-rose-800/40 p-2.5 rounded-lg text-left">
+                <AlertCircle className="w-4 h-4 shrink-0 text-rose-400" />
                 <span>{error}</span>
               </div>
             )}
 
             {infoMessage && (
-              <div className="flex items-center gap-2 text-xs text-cyan-300 bg-cyan-500/10 border border-cyan-500/20 p-2.5 rounded-lg text-left">
-                <CheckCircle2 className="w-4 h-4 shrink-0" />
+              <div className="flex items-center gap-2 text-xs text-emerald-300 bg-emerald-950/40 border border-emerald-800/40 p-2.5 rounded-lg text-left">
+                <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-400" />
                 <span>{infoMessage}</span>
               </div>
             )}
           </div>
 
-          <hr className="border-white/10 my-0.5" />
+          <hr className="border-[rgba(241,239,234,0.08)] my-0.5" />
 
           <div>
             <button
               onClick={handleAction}
               disabled={loading}
-              className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold px-5 py-3 rounded-xl shadow-[0_4px_20px_rgba(6,182,212,0.3)] hover:shadow-[0_4px_25px_rgba(6,182,212,0.45)] transition-all mb-3 text-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-[#F1EFEA] hover:bg-white text-[#111110] font-medium px-5 py-2.5 rounded-xl transition-all mb-3 text-xs shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
             >
               {loading ? (
-                <span>Processing...</span>
+                <span>Authenticating...</span>
               ) : mode === "signin" ? (
-                <>Sign in to Dashboard <ArrowRight className="w-4 h-4" /></>
+                <>Enter Academy Dashboard <ArrowRight className="w-3.5 h-3.5" /></>
               ) : mode === "signup" ? (
-                <>Enroll & Get Verification <Mail className="w-4 h-4" /></>
+                <>Enroll Free & Verify Email <Mail className="w-3.5 h-3.5" /></>
               ) : (
-                <>Verify 2FA Code <KeyRound className="w-4 h-4" /></>
+                <>Verify 2FA Security Code <KeyRound className="w-3.5 h-3.5" /></>
               )}
             </button>
 
@@ -242,7 +243,7 @@ const SignIn1: React.FC<SignInProps> = ({
               <button 
                 onClick={handleGoogleClick}
                 disabled={loading}
-                className="w-full flex items-center justify-center gap-2.5 bg-white/[0.06] hover:bg-white/[0.12] border border-white/10 rounded-xl px-5 py-3 font-medium text-white shadow transition-all mb-2 text-sm disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2.5 bg-[#1c1c1b] hover:bg-[#262624] border border-[rgba(241,239,234,0.12)] rounded-xl px-5 py-2.5 font-medium text-[#F1EFEA] transition-all mb-2 text-xs disabled:opacity-50 cursor-pointer"
               >
                 <img
                   src="https://cdn.21st.dev/assets/mirror/38/38146bfd9eff6dbf0d74771f2e625c70d87d3770e0d080dbb6e50db1d5403f46.svg"
@@ -255,21 +256,21 @@ const SignIn1: React.FC<SignInProps> = ({
 
             <div className="w-full text-center mt-3">
               {mode === "signin" ? (
-                <span className="text-xs text-slate-400">
-                  Don&apos;t have an account?{" "}
+                <span className="text-xs text-[#98968f]">
+                  New to Security Analyzires?{" "}
                   <button
                     onClick={() => { setMode("signup"); setError(""); setInfoMessage(""); }}
-                    className="underline text-cyan-400 hover:text-cyan-300 font-medium ml-1"
+                    className="text-[#F1EFEA] underline font-medium ml-1 cursor-pointer hover:opacity-80"
                   >
-                    Sign up, it&apos;s free!
+                    Enroll free here
                   </button>
                 </span>
               ) : mode === "signup" ? (
-                <span className="text-xs text-slate-400">
-                  Already registered?{" "}
+                <span className="text-xs text-[#98968f]">
+                  Already enrolled?{" "}
                   <button
                     onClick={() => { setMode("signin"); setError(""); setInfoMessage(""); }}
-                    className="underline text-cyan-400 hover:text-cyan-300 font-medium ml-1"
+                    className="text-[#F1EFEA] underline font-medium ml-1 cursor-pointer hover:opacity-80"
                   >
                     Sign in here
                   </button>
@@ -277,7 +278,7 @@ const SignIn1: React.FC<SignInProps> = ({
               ) : (
                 <button
                   onClick={() => { setMode("signin"); setError(""); setInfoMessage(""); }}
-                  className="text-xs text-slate-400 hover:text-white underline"
+                  className="text-xs text-[#98968f] hover:text-[#F1EFEA] underline cursor-pointer"
                 >
                   Back to Sign In
                 </button>
@@ -287,31 +288,31 @@ const SignIn1: React.FC<SignInProps> = ({
         </div>
       </div>
 
-      {/* User count and active community avatars */}
-      <div className="relative z-10 mt-8 flex flex-col items-center text-center">
-        <p className="text-slate-400 text-xs mb-2">
-          Join <span className="font-semibold text-white">4,800+</span> aspiring cyber defense specialists.
+      {/* Community proof */}
+      <div className="relative z-10 mt-6 flex flex-col items-center text-center">
+        <p className="text-[#98968f] text-xs mb-2">
+          Join <span className="font-semibold text-[#F1EFEA]">4,800+</span> enrolled cyber defense specialists.
         </p>
         <div className="flex -space-x-2">
           <img
             src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&h=80&q=80"
             alt="Student"
-            className="w-7 h-7 rounded-full border-2 border-[#070b14] object-cover"
+            className="w-6 h-6 rounded-full border border-[#141413] object-cover"
           />
           <img
             src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=80&h=80&q=80"
             alt="Student"
-            className="w-7 h-7 rounded-full border-2 border-[#070b14] object-cover"
+            className="w-6 h-6 rounded-full border border-[#141413] object-cover"
           />
           <img
             src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=80&h=80&q=80"
             alt="Student"
-            className="w-7 h-7 rounded-full border-2 border-[#070b14] object-cover"
+            className="w-6 h-6 rounded-full border border-[#141413] object-cover"
           />
           <img
             src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=80&h=80&q=80"
             alt="Student"
-            className="w-7 h-7 rounded-full border-2 border-[#070b14] object-cover"
+            className="w-6 h-6 rounded-full border border-[#141413] object-cover"
           />
         </div>
       </div>

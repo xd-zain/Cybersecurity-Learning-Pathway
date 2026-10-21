@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, LogOut, Award, Sparkles, BookOpen } from 'lucide-react';
+import { User, LogOut, Award, Sparkles, BookOpen, Lock } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface NavbarProps {
@@ -36,14 +36,20 @@ export const Navbar: React.FC<NavbarProps> = ({
         {/* Minimalist pill navigation links */}
         <nav className="flex items-center gap-2 sm:gap-3 text-xs sm:text-[13.5px] font-medium text-[#98968f]">
           <button
-            onClick={() => setActiveView('dashboard')}
+            onClick={() => {
+              if (!isAuthenticated) {
+                onOpenAuth('signin');
+              } else {
+                setActiveView('dashboard');
+              }
+            }}
             className={`flex items-center gap-1.5 whitespace-nowrap shrink-0 transition-all cursor-pointer px-3.5 py-1.5 rounded-full border ${
               activeView === 'dashboard' 
                 ? 'border-[#F1EFEA] text-[#111110] bg-[#F1EFEA] font-medium shadow-[0_2px_10px_rgba(241,239,234,0.15)]' 
                 : 'border-transparent text-[#98968f] hover:text-[#F1EFEA] hover:border-[rgba(241,239,234,0.16)]'
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5" />
+            {isAuthenticated ? <BookOpen className="w-3.5 h-3.5" /> : <Lock className="w-3 h-3 text-[#98968f]" />}
             <span>10-Module LMS</span>
           </button>
 
@@ -59,14 +65,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
           
           <button
-            onClick={() => setActiveView('assistant')}
+            onClick={() => {
+              if (!isAuthenticated) {
+                onOpenAuth('signin');
+              } else {
+                setActiveView('assistant');
+              }
+            }}
             className={`flex items-center gap-1.5 whitespace-nowrap shrink-0 transition-all cursor-pointer px-3.5 py-1.5 rounded-full border ${
               activeView === 'assistant' 
                 ? 'border-[#F1EFEA] text-[#111110] bg-[#F1EFEA] font-medium shadow-[0_2px_10px_rgba(241,239,234,0.15)]' 
                 : 'border-transparent text-[#98968f] hover:text-[#F1EFEA] hover:border-[rgba(241,239,234,0.16)]'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5" />
+            {isAuthenticated ? <Sparkles className="w-3.5 h-3.5" /> : <Lock className="w-3 h-3 text-[#98968f]" />}
             <span>Dual-AI Mentor</span>
           </button>
 
