@@ -1,0 +1,6 @@
+{
+  "name": "Security Analyzires",
+  "description": "Production-grade cybersecurity learning management system with a 10-module curriculum, real-time assessments, dual-Gemini AI mentors, and certified graduation credentials.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
