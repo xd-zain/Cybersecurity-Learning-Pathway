@@ -16,7 +16,8 @@ const MainApp: React.FC = () => {
     user, 
     signIn, 
     signUp, 
-    googleSignIn, 
+    forgotPassword,
+    resetPassword,
     verify2FA, 
     verifyToken,
     certificate 
@@ -33,7 +34,8 @@ const MainApp: React.FC = () => {
   });
 
   const [authModalOpen, setAuthModalOpen] = useState(false);
-  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signin');
+  const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'forgot' | 'reset'>('signin');
+  const [initialResetToken, setInitialResetToken] = useState<string>('');
   const [certModalOpen, setCertModalOpen] = useState(false);
 
   // Notification banners (e.g. email verified successfully)
@@ -59,13 +61,13 @@ const MainApp: React.FC = () => {
     };
   }, []);
 
-  // 2. Handle URL email verification link (?verifyToken=...)
+  // 2. Handle URL email verification link (?verifyToken=...) and password reset link (?resetToken=...)
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams(window.location.search);
-    const token = params.get('verifyToken');
-    if (token) {
-      verifyToken(token).then((res) => {
+    const verifyTok = params.get('verifyToken');
+    if (verifyTok) {
+      verifyToken(verifyTok).then((res) => {
         if (res.success) {
           setToastMessage('🎉 Email identity successfully verified! Your enrollment in Security Analyzires is active.');
           setActiveView('dashboard');
@@ -74,6 +76,15 @@ const MainApp: React.FC = () => {
           setToastMessage(`⚠️ Verification error: ${res.error}`);
         }
       });
+    }
+
+    const resetTok = params.get('resetToken');
+    if (resetTok) {
+      setInitialResetToken(resetTok);
+      setAuthMode('reset');
+      setAuthModalOpen(true);
+      setToastMessage('🔑 Password reset link verified. Enter your new password below.');
+      window.history.replaceState({}, document.title, window.location.pathname);
     }
   }, []);
 
@@ -94,7 +105,7 @@ const MainApp: React.FC = () => {
     }
   }, [isAuthenticated]);
 
-  const handleOpenAuth = (mode: 'signin' | 'signup' = 'signin') => {
+  const handleOpenAuth = (mode: 'signin' | 'signup' | 'forgot' | 'reset' = 'signin') => {
     setAuthMode(mode);
     setAuthModalOpen(true);
   };
@@ -125,11 +136,18 @@ const MainApp: React.FC = () => {
     return res;
   };
 
-  const handleGoogleAction = async () => {
-    const res = await googleSignIn();
+  const handleForgotPasswordAction = async (email: string) => {
+    const res = await forgotPassword(email);
     if (res.success) {
-      setAuthModalOpen(false);
-      setActiveView('dashboard');
+      setToastMessage(res.message || `Password reset instructions sent to ${email}`);
+    }
+    return res;
+  };
+
+  const handleResetPasswordAction = async (tokenOrCode: string, newPass: string) => {
+    const res = await resetPassword(tokenOrCode, newPass);
+    if (res.success) {
+      setToastMessage('🎉 Password successfully updated! Please sign in with your new password.');
     }
     return res;
   };
@@ -198,11 +216,16 @@ const MainApp: React.FC = () => {
           <div className="relative w-full max-w-md">
             <SignIn1
               defaultMode={authMode}
+              initialResetCode={initialResetToken}
               onSignIn={handleSignInAction}
               onSignUp={handleSignUpAction}
-              onGoogleSignIn={handleGoogleAction}
+              onForgotPassword={handleForgotPasswordAction}
+              onResetPassword={handleResetPasswordAction}
               onVerify2FA={handleVerify2FAAction}
-              onClose={() => setAuthModalOpen(false)}
+              onClose={() => {
+                setAuthModalOpen(false);
+                setInitialResetToken('');
+              }}
             />
           </div>
         </div>

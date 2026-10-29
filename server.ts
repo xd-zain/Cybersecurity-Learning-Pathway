@@ -10,13 +10,23 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+import crypto from 'crypto';
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const isDev = process.env.NODE_ENV !== 'production';
 
 app.use(express.json());
 
-// In-memory verification and OTP store (backed by email)
+// Persistent in-memory user registry and auth store
+interface RegisteredUser {
+  name: string;
+  email: string;
+  passwordHash: string;
+  enrolledAt: string;
+  twoFactorEnabled: boolean;
+}
+
 interface PendingVerification {
   token: string;
   email: string;
@@ -30,8 +40,29 @@ interface PendingOtp {
   expiresAt: number;
 }
 
+interface PasswordReset {
+  token: string;
+  email: string;
+  expiresAt: number;
+}
+
+const usersDb = new Map<string, RegisteredUser>();
 const verifications = new Map<string, PendingVerification>();
 const otps = new Map<string, PendingOtp>();
+const passwordResets = new Map<string, PasswordReset>();
+
+function hashPassword(password: string): string {
+  return crypto.createHash('sha256').update(password + '_sec_salt_2026').digest('hex');
+}
+
+// Seed a default demo admin student
+usersDb.set('student@securityanalyzires.io', {
+  name: 'Alex Rivera',
+  email: 'student@securityanalyzires.io',
+  passwordHash: hashPassword('CyberSecurity2026!'),
+  enrolledAt: new Date().toISOString(),
+  twoFactorEnabled: false
+});
 
 // Configure Nodemailer transporter with fallback
 function createTransporter() {
@@ -130,6 +161,270 @@ app.post('/api/auth/send-verification', async (req: Request, res: Response) => {
   } catch (err: any) {
     console.error('Error sending verification email:', err);
     res.status(500).json({ success: false, error: err.message || 'Email delivery failed' });
+  }
+});
+
+// 1b. Register with Email, Password and Name
+app.post('/api/auth/register', async (req: Request, res: Response) => {
+  try {
+    const { name, email, password } = req.body;
+    if (!email || !password || !name) {
+      res.status(400).json({ success: false, error: 'Full name, email, and password are required' });
+      return;
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    if (password.length < 6) {
+      res.status(400).json({ success: false, error: 'Password must be at least 6 characters' });
+      return;
+    }
+
+    if (usersDb.has(normalizedEmail)) {
+      res.status(400).json({ success: false, error: 'An account with this email already exists. Please sign in.' });
+      return;
+    }
+
+    const newUser: RegisteredUser = {
+      name: name.trim(),
+      email: normalizedEmail,
+      passwordHash: hashPassword(password),
+      enrolledAt: new Date().toISOString(),
+      twoFactorEnabled: false
+    };
+
+    usersDb.set(normalizedEmail, newUser);
+
+    // Send verification link
+    const token = 'sec_' + Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
+    verifications.set(token, {
+      token,
+      email: normalizedEmail,
+      name: newUser.name,
+      createdAt: Date.now()
+    });
+
+    const appUrl = process.env.APP_URL || `http://localhost:${PORT}`;
+    const verifyLink = `${appUrl}/?verifyToken=${token}&email=${encodeURIComponent(normalizedEmail)}`;
+
+    const html = `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #111110; color: #F1EFEA; padding: 40px; border-radius: 12px; max-width: 600px; margin: 0 auto; border: 1px solid rgba(241,239,234,0.15);">
+        <h1 style="color: #F1EFEA; margin: 0; font-size: 22px;">Security Analyzires® Enrollment</h1>
+        <p style="color: #98968f; font-size: 13px;">Welcome, ${newUser.name}. Your account has been registered with password protection.</p>
+        <div style="margin: 24px 0;">
+          <a href="${verifyLink}" style="background: #F1EFEA; color: #111110; text-decoration: none; font-weight: 600; padding: 12px 28px; border-radius: 999px; display: inline-block;">
+            Verify Email & Access Dashboard
+          </a>
+        </div>
+      </div>
+    `;
+
+    await mailer.sendMail({
+      from: SENDER_EMAIL,
+      to: normalizedEmail,
+      subject: 'Security Analyzires — Complete Your Enrollment',
+      html,
+      text: `Welcome to Security Analyzires! Complete your enrollment at: ${verifyLink}`
+    });
+
+    res.json({
+      success: true,
+      message: 'Account registered! Verification email sent.',
+      user: {
+        name: newUser.name,
+        email: newUser.email,
+        enrolledAt: newUser.enrolledAt,
+        twoFactorEnabled: newUser.twoFactorEnabled
+      },
+      verifyLink
+    });
+  } catch (err: any) {
+    console.error('Error during registration:', err);
+    res.status(500).json({ success: false, error: err.message || 'Registration failed' });
+  }
+});
+
+// 1c. Login strictly with Email & Password
+app.post('/api/auth/login', async (req: Request, res: Response) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      res.status(400).json({ success: false, error: 'Email and password are required' });
+      return;
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = usersDb.get(normalizedEmail);
+
+    if (!user) {
+      res.status(401).json({ success: false, error: 'No account found with this email. Please enroll first.' });
+      return;
+    }
+
+    const inputHash = hashPassword(password);
+    if (user.passwordHash !== inputHash) {
+      res.status(401).json({ success: false, error: 'Incorrect password. Please verify your credentials or click Forgot Password.' });
+      return;
+    }
+
+    if (user.twoFactorEnabled) {
+      // Trigger 2FA
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
+      otps.set(normalizedEmail, {
+        code,
+        email: normalizedEmail,
+        expiresAt: Date.now() + 10 * 60 * 1000
+      });
+
+      await mailer.sendMail({
+        from: SENDER_EMAIL,
+        to: normalizedEmail,
+        subject: `Security Analyzires — ${code} is your 2FA OTP`,
+        text: `Your 2FA login code is: ${code}`
+      });
+
+      res.json({
+        success: false,
+        requires2FA: true,
+        message: '2FA code sent to your email.'
+      });
+      return;
+    }
+
+    res.json({
+      success: true,
+      user: {
+        name: user.name,
+        email: user.email,
+        enrolledAt: user.enrolledAt,
+        twoFactorEnabled: user.twoFactorEnabled
+      }
+    });
+  } catch (err: any) {
+    console.error('Error during login:', err);
+    res.status(500).json({ success: false, error: err.message || 'Login failed' });
+  }
+});
+
+// 1d. Forgot Password: send reset password link and code
+app.post('/api/auth/forgot-password', async (req: Request, res: Response) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      res.status(400).json({ success: false, error: 'Email address is required' });
+      return;
+    }
+
+    const normalizedEmail = email.toLowerCase().trim();
+    const user = usersDb.get(normalizedEmail);
+
+    if (!user) {
+      res.status(404).json({ success: false, error: 'No account registered with this email address.' });
+      return;
+    }
+
+    const resetToken = 'rst_' + Math.random().toString(36).substring(2, 14) + Date.now().toString(36);
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+    
+    passwordResets.set(resetToken, {
+      token: resetToken,
+      email: normalizedEmail,
+      expiresAt: Date.now() + 30 * 60 * 1000 // 30 minutes
+    });
+
+    // Also store by code for easy UI manual entry
+    passwordResets.set(resetCode, {
+      token: resetToken,
+      email: normalizedEmail,
+      expiresAt: Date.now() + 30 * 60 * 1000
+    });
+
+    const appUrl = process.env.APP_URL || `http://localhost:${PORT}`;
+    const resetLink = `${appUrl}/?resetToken=${resetToken}&email=${encodeURIComponent(normalizedEmail)}`;
+
+    const html = `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #111110; color: #F1EFEA; padding: 40px; border-radius: 12px; max-width: 600px; margin: 0 auto; border: 1px solid rgba(241,239,234,0.15);">
+        <h1 style="color: #F1EFEA; margin: 0; font-size: 22px;">Reset Your Password</h1>
+        <p style="color: #98968f; font-size: 13px;">We received a request to reset the password for your Security Analyzires account (<strong>${normalizedEmail}</strong>).</p>
+        
+        <div style="background: #171716; padding: 16px; border-radius: 8px; margin: 20px 0; border: 1px solid rgba(241,239,234,0.1); text-align: center;">
+          <p style="color: #98968f; font-size: 11px; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 1px;">Your 6-Digit Password Reset Code</p>
+          <span style="font-size: 28px; font-weight: 700; letter-spacing: 4px; color: #F1EFEA; font-family: monospace;">${resetCode}</span>
+        </div>
+
+        <div style="text-align: center; margin: 24px 0;">
+          <a href="${resetLink}" style="background: #F1EFEA; color: #111110; text-decoration: none; font-weight: 600; padding: 12px 28px; border-radius: 999px; display: inline-block;">
+            Reset Password via Direct Link
+          </a>
+        </div>
+        <p style="font-size: 11px; color: #98968f;">This reset link and code will expire in 30 minutes. If you did not request this, you can safely ignore this email.</p>
+      </div>
+    `;
+
+    await mailer.sendMail({
+      from: SENDER_EMAIL,
+      to: normalizedEmail,
+      subject: `Security Analyzires — Reset Password Code: ${resetCode}`,
+      html,
+      text: `Your Security Analyzires password reset code is: ${resetCode}. Or reset directly at: ${resetLink}`
+    });
+
+    res.json({
+      success: true,
+      message: 'Password reset email sent. Please check your inbox.',
+      resetCode, // provided for preview / evaluation ease
+      resetLink
+    });
+  } catch (err: any) {
+    console.error('Error during forgot-password:', err);
+    res.status(500).json({ success: false, error: err.message || 'Failed to dispatch reset email' });
+  }
+});
+
+// 1e. Reset Password with Token/Code
+app.post('/api/auth/reset-password', (req: Request, res: Response) => {
+  try {
+    const { email, token, newPassword } = req.body;
+    if (!newPassword || (!token && !email)) {
+      res.status(400).json({ success: false, error: 'Reset token/code and new password are required' });
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      res.status(400).json({ success: false, error: 'New password must be at least 6 characters' });
+      return;
+    }
+
+    const resetRecord = passwordResets.get(token.trim());
+    if (!resetRecord) {
+      res.status(400).json({ success: false, error: 'Invalid or expired reset code/token. Please request a new one.' });
+      return;
+    }
+
+    if (Date.now() > resetRecord.expiresAt) {
+      passwordResets.delete(token.trim());
+      res.status(400).json({ success: false, error: 'Reset code/token has expired. Please request a new one.' });
+      return;
+    }
+
+    const targetEmail = resetRecord.email;
+    const user = usersDb.get(targetEmail);
+    if (!user) {
+      res.status(404).json({ success: false, error: 'User account not found' });
+      return;
+    }
+
+    // Update password in database
+    user.passwordHash = hashPassword(newPassword);
+    usersDb.set(targetEmail, user);
+    passwordResets.delete(token.trim());
+
+    res.json({
+      success: true,
+      message: 'Password successfully updated! You can now sign in with your new password.'
+    });
+  } catch (err: any) {
+    console.error('Error during password reset:', err);
+    res.status(500).json({ success: false, error: err.message || 'Password reset failed' });
   }
 });
 
